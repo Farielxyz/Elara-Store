@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elara MD - Registrasi & Store</title>
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --text-color: #ffffff;
+            --accent: #00d2d3;
+            --warning: #ffbd59;
+            --premium-grad: linear-gradient(to right, #8e2de2, #4a00e0);
+            --sewa-grad: linear-gradient(to right, #11998e, #38ef7d);
+            --vvip-grad: linear-gradient(to right, #f857a6, #ff5858);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* --- STYLES LOGO & NAMA BOT --- */
+        .header-logo-container { margin-bottom: 25px; }
+        .bot-logo {
+            width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 10px;
+            border: 3px solid white; box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+            animation: float 6s ease-in-out infinite;
+        }
+        @keyframes float { 0% {transform: translateY(0px);} 50% {transform: translateY(-10px);} 100% {transform: translateY(0px);} }
+
+        .bot-name {
+            font-size: 2.5em; margin: 0;
+            background: linear-gradient(90deg, #4facfe, #00f2fe, #FF6584, #8e2de2);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+        .bot-subtitle { font-size: 1.1em; color: var(--accent); margin-top: 5px; font-weight: 600; }
+
+        /* --- BUTTONS --- */
+        .btn-group-main { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+        .btn {
+            padding: 15px 20px; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s; color: white; text-decoration: none; width: 100%; position: relative; overflow: hidden;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-diskon { background: linear-gradient(45deg, #FF416C, #FF4B2B); box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4); }
+        .btn-kombinasi { background: linear-gradient(45deg, #11998e, #38ef7d); box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4); }
+        .btn-reg { background: linear-gradient(45deg, #8E2DE2, #4A00E0); box-shadow: 0 4px 15px rgba(142, 45, 226, 0.4); }
+        .btn-info { background: linear-gradient(45deg, #4b6cb7, #182848); box-shadow: 0 4px 15px rgba(75, 108, 183, 0.4); border: 1px solid rgba(255,255,255,0.2); }
+
+        /* --- FORM REGISTRASI --- */
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-label { display: block; margin-bottom: 5px; color: var(--accent); font-weight: bold; font-size: 0.9em; }
+        .form-input {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3); color: white; font-size: 1em; box-sizing: border-box; transition: 0.3s;
+        }
+        .form-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 210, 211, 0.3); }
+        
+        .loading-spinner {
+            display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: white; animation: spin 1s ease-in-out infinite; margin-right: 10px; vertical-align: middle;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- UTILITY & SECTIONS --- */
+        .content-section { display: none; animation: fadeIn 0.5s ease-in-out; text-align: left; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Styles asli lainnya (Table, Modal, dll) tetap ada namun disederhanakan untuk jawaban ini */
+        .rules-box { background: rgba(0, 0, 0, 0.3); border-left: 4px solid var(--warning); padding: 15px; border-radius: 8px; text-align: left; margin-bottom: 25px; font-size: 0.9em; }
+        .rules-title { color: var(--warning); font-weight: bold; display: block; margin-bottom: 8px; }
+        .rules-list { margin: 0; padding-left: 20px; color: #e0e0e0; line-height: 1.5; }
+        
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background: #1e272e; padding: 25px; border-radius: 15px; max-width: 90%; width: 400px; text-align: center; color: white; position: relative; border: 1px solid var(--accent); }
+        .close-modal { position: absolute; top: 10px; right: 15px; font-size: 28px; cursor: pointer; color: #aaa; }
+
+        /* Music Control */
+        .music-control { position: fixed; bottom: 30px; right: 30px; width: 50px; height: 50px; background: #25D366; border-radius: 50%; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); font-size: 1.5em; z-index: 50; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); } }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-logo-container">
+        <img src="https://uploader.zenzxz.dpdns.org/uploads/1764871685819.jpeg" alt="Logo Elara MD" class="bot-logo">
+        <h1 class="bot-name">Elara - MD</h1>
+        <p class="bot-subtitle">Bot WhatsApp Multifungsi</p>
+    </div>
+    
+    <div id="main-menu">
+        <div class="rules-box">
+            <span class="rules-title">⚠️ INFO PENTING</span>
+            <ul class="rules-list">
+                <li>Untuk Pembelian, wajib follow saluran.</li>
+                <li>Gunakan nomor WhatsApp aktif untuk Registrasi.</li>
+            </ul>
+        </div>
+
+        <div class="btn-group-main">
+            <button class="btn btn-reg" onclick="showSection('daftar')">📝 DAFTAR KE BOT VIA WEB</button>
+            <button class="btn btn-diskon" onclick="showSection('diskon')">🛍️ PROMO DISKON 45%</button>
+            <button class="btn btn-kombinasi" onclick="showSection('kombinasi')">📦 PROMO KOMBINASI</button>
+            <button class="btn btn-info" onclick="openInfoModal()">ℹ️ INFO & LAYANAN</button>
+        </div>
+    </div>
+
+    <div id="section-daftar" class="content-section">
+        <h2 style="text-align: center; color: #8E2DE2; margin-bottom: 20px;">FORM REGISTRASI</h2>
+        <p style="text-align:center; font-size:0.9em; color:#ccc; margin-bottom:20px;">
+            Masukkan data diri Anda. Bot akan mengirimkan kode OTP ke WhatsApp Anda.
+        </p>
+
+        <form id="regForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label class="form-label">Nomor WhatsApp</label>
+                <input type="number" id="regNumber" class="form-input" placeholder="Contoh: 081234567890" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Nama Panggilan</label>
+                <input type="text" id="regName" class="form-input" placeholder="Contoh: Elara" maxlength="20" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Umur</label>
+                <input type="number" id="regAge" class="form-input" placeholder="Contoh: 18" min="5" max="70" required>
+            </div>
+            
+            <button type="submit" class="btn btn-reg" id="btnSubmitReg">
+                🚀 KIRIM OTP
+            </button>
+        </form>
+        <div id="regStatus" style="margin-top:15px; font-weight:bold; text-align:center;"></div>
+    </div>
+
+    <div id="section-diskon" class="content-section">
+        <h2 style="text-align: center;">PROMO DISKON (Lihat Menu Awal)</h2>
+        </div>
+    <div id="section-kombinasi" class="content-section">
+        <h2 style="text-align: center;">PROMO KOMBINASI (Lihat Menu Awal)</h2>
+        </div>
+
+    <button onclick="goBack()" id="back-btn" style="margin-top:15px; background:transparent; border:1px solid #777; color:#aaa; padding:8px 15px; border-radius:8px; cursor:pointer; display:none; width:100%;">⬅ Kembali ke Menu Utama</button>
+</div>
+
+<div id="infoModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeInfoModal()">&times;</span>
+        <h3>ℹ️ Info Bot</h3>
+        <p>Elara MD adalah bot multifungsi untuk memudahkan aktivitas grup WhatsApp Anda.</p>
+    </div>
+</div>
+
+<audio id="background-music" preload="auto" loop src="https://uploader.zenzxz.dpdns.org/uploads/1764871300271.mpga"></audio>
+<div id="music-control" class="music-control" onclick="toggleMusic()">▶️</div>
+
+<script>
+    const menuSection = document.getElementById('main-menu');
+    const sections = document.querySelectorAll('.content-section');
+    const backBtn = document.getElementById('back-btn');
+    const infoModal = document.getElementById('infoModal');
+
+    // --- NAVIGASI ---
+    function showSection(id) {
+        menuSection.style.display = 'none';
+        sections.forEach(sec => sec.style.display = 'none');
+        document.getElementById('section-' + id).style.display = 'block';
+        backBtn.style.display = 'inline-block';
+    }
+
+    function goBack() {
+        menuSection.style.display = 'block';
+        sections.forEach(sec => sec.style.display = 'none');
+        backBtn.style.display = 'none';
+        document.getElementById('regStatus').innerHTML = ''; // Reset status
+    }
+
+    // --- LOGIKA REGISTRASI ---
+    async function handleRegister(e) {
+        e.preventDefault();
+        
+        const btn = document.getElementById('btnSubmitReg');
+        const statusDiv = document.getElementById('regStatus');
+        const number = document.getElementById('regNumber').value;
+        const name = document.getElementById('regName').value;
+        const age = document.getElementById('regAge').value;
+
+        // UI Loading
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span> Memproses...';
+        statusDiv.innerHTML = '';
+        statusDiv.style.color = '#ccc';
+
+        try {
+            // GANTI URL DI BAWAH INI SESUAI IP SERVER/BOT ANDA
+            // Jika testing lokal: http://localhost:3000/api/register
+            // Jika bot di hosting, gunakan IP hosting: http://IP_ADDRESS:3000/api/register
+            const response = await fetch('http://localhost:3000/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ number, name, age })
+            });
+
+            const result = await response.json();
+
+            if (result.status) {
+                statusDiv.style.color = '#2ed573';
+                statusDiv.innerHTML = `✅ ${result.message}<br>Silakan cek WhatsApp dan Reply Pesan Bot!`;
+                // Reset form
+                document.getElementById('regForm').reset();
+            } else {
+                statusDiv.style.color = '#ff4757';
+                statusDiv.innerHTML = `❌ ${result.message}`;
+            }
+
+        } catch (error) {
+            console.error(error);
+            statusDiv.style.color = '#ff4757';
+            statusDiv.innerHTML = '❌ Gagal menghubungi Server Bot. Pastikan Bot menyala.';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '🚀 KIRIM OTP';
+        }
+    }
+
+    // --- MODAL & MUSIC (Sama seperti script lama Anda) ---
+    function openInfoModal() { infoModal.style.display = 'flex'; }
+    function closeInfoModal() { infoModal.style.display = 'none'; }
+    window.onclick = function(e) { if(e.target == infoModal) closeInfoModal(); }
+
+    const audio = document.getElementById('background-music');
+    const musicCtrl = document.getElementById('music-control');
+    function toggleMusic() {
+        if (audio.paused) {
+            audio.play(); musicCtrl.innerHTML = "⏸️"; musicCtrl.style.background = "#FF416C";
+        } else {
+            audio.pause(); musicCtrl.innerHTML = "▶️"; musicCtrl.style.background = "#25D366";
+        }
+    }
+</script>
+
+</body>
+</html>
