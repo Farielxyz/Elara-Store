@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elara Store - Official Bot</title>
+    <style>
+        :root {
+            /* Warna Utama: Biru-Hijau (Teal) */
+            --primary-grad: linear-gradient(135deg, #11998e, #38ef7d);
+            --btn-grad: linear-gradient(to right, #00b4db, #0083b0); 
+            --glass-bg: rgba(20, 20, 20, 0.7);
+            --text-color: #ffffff;
+            --accent: #00d2d3;
+            --danger: #ff4757;
+            --card-border: rgba(255, 255, 255, 0.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* Background Image Sesuai Request */
+            background: url('https://uploader.zenzxz.dpdns.org/uploads/1765268784695.jpeg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* Overlay gelap agar teks terbaca */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        /* --- CONTAINER UTAMA --- */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 30px 20px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            border: 1px solid var(--card-border);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 20px 0;
+            padding-bottom: 80px; /* Memberi ruang agar tidak tertutup player musik di HP */
+        }
+
+        /* --- HEADER --- */
+        .bot-logo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid rgba(255,255,255,0.8);
+            box-shadow: 0 0 20px rgba(0, 210, 211, 0.6);
+            margin-bottom: 10px;
+            animation: pulseGlow 3s infinite;
+        }
+
+        .store-name {
+            font-size: 2.2em;
+            margin: 5px 0;
+            font-weight: 900;
+            background: linear-gradient(90deg, #ff9a9e, #fecfef, #00d2d3, #feada6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .store-subtitle {
+            font-size: 1.1em;
+            margin-top: 0;
+            font-weight: 700;
+            background: linear-gradient(90deg, #a18cd1, #fbc2eb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+        }
+
+        .welcome-text {
+            font-style: italic;
+            font-size: 0.9em;
+            color: #ddd;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            padding: 0 10px;
+        }
+
+        /* --- TOMBOL MENU UTAMA (Biru Hijau) --- */
+        .btn-menu {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: none;
+            border-radius: 15px;
+            background: var(--btn-grad);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 180, 219, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-menu:active { transform: scale(0.98); }
+        .btn-menu:hover { box-shadow: 0 6px 20px rgba(0, 180, 219, 0.6); }
+
+        /* --- HALAMAN HARGA (SECTIONS) --- */
+        .content-section {
+            display: none;
+            text-align: left;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 15px;
+        }
+
+        .promo-btn {
+            display: inline-block;
+            background: #f1c40f; /* Kuning */
+            color: #000;
+            padding: 8px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-top: 10px;
+            animation: bounce 2s infinite;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
+        }
+
+        /* --- TABEL HARGA --- */
+        .price-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .price-info h4 {
+            margin: 0;
+            color: #00d2d3;
+            font-size: 1.1em;
+        }
+
+        .price-info span {
+            color: #fff;
+            font-weight: bold;
+            font-size: 0.95em;
+        }
+
+        .btn-buy {
+            background: linear-gradient(to right, #11998e, #38ef7d);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none;
+            box-shadow: 0 2px 10px rgba(56, 239, 125, 0.3);
+        }
+        
+        .btn-buy:active { transform: scale(0.95); }
+
+        /* --- BENEFITS LIST --- */
+        .benefit-box {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .benefit-title {
+            display: block;
+            text-align: center;
+            font-weight: bold;
+            color: #ffbd59;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .benefit-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.95em;
+            color: #eee;
+        }
+        .benefit-list li {
+            margin-bottom: 6px;
+            padding-left: 20px;
+            position: relative;
+        }
+        .benefit-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #38ef7d;
+            font-weight: bold;
+        }
+
+        /* --- INTERSTITIAL (POPUP SOSMED) --- */
+        #interstitial-modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); 
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(2px);
+        }
+        
+        .interstitial-content {
+            text-align: center;
+            max-width: 350px;
+            width: 85%;
+            animation: zoomIn 0.4s;
+            background: #101010;
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .close-countdown {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255,255,255,0.1);
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            border: 1px solid #555;
+            font-size: 0.9em;
+        }
+
+        .social-btn {
+            display: block;
+            background: #222;
+            color: white;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            text-decoration: none;
+            border: 1px solid #444;
+            transition: 0.3s;
+        }
+        .social-btn:hover { background: #333; border-color: #00d2d3; }
+
+        /* --- MODAL PAYMENT --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 300;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: #1e272e;
+            padding: 25px;
+            border-radius: 15px;
+            width: 350px;
+            max-width: 90%;
+            text-align: center;
+            position: relative;
+            border: 1px solid #444;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .qris-container {
+            position: relative;
+            padding: 5px;
+            border-radius: 12px;
+            margin: 15px auto;
+            width: 200px;
+            background: linear-gradient(90deg, red, yellow, lime, cyan, blue, magenta, red);
+            background-size: 400%;
+            animation: rgbBorder 5s linear infinite;
+        }
+
+        .qris-img {
+            width: 100%;
+            display: block;
+            border-radius: 8px;
+            background: white;
+        }
+
+        @keyframes rgbBorder {
+            0% { background-position: 0% 0; }
+            100% { background-position: 400% 0; }
+        }
+
+        .total-price {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2ecc71;
+            margin: 10px 0;
+        }
+
+        .copy-box {
+            background: #2f3640;
+            padding: 10px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: monospace;
+            font-size: 1.2em;
+            cursor: pointer;
+            border: 1px dashed #7f8fa6;
+            transition: 0.2s;
+        }
+        .copy-box:active { background: #353b48; transform: scale(0.98); }
+
+        .warning-text {
+            font-size: 0.8em;
+            color: #ff6b81;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .btn-confirm {
+            background: #3742fa;
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            border: none;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        /* --- SCROLL SELECTOR --- */
+        .scroll-selector-container {
+            height: 200px;
+            overflow-y: scroll;
+            background: #111;
+            border-radius: 10px;
+            border: 1px solid #444;
+            position: relative;
+            margin: 20px 0;
+            scroll-behavior: smooth;
+        }
+        .scroll-selector-container::-webkit-scrollbar { width: 5px; }
+        .scroll-selector-container::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        
+        .scroll-item {
+            padding: 15px;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+            color: #aaa;
+            transition: 0.2s;
+            font-size: 1.2em;
+        }
+        .scroll-item:hover { background: #222; color: #fff; transform: scale(1.05); }
+        .scroll-item.special { color: #ffd32a; font-weight: bold; border-top: 2px solid #ffd32a; }
+
+        /* --- METHOD SELECTOR --- */
+        .method-list {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-method {
+            padding: 10px;
+            border: 1px solid #555;
+            background: #2f3640;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn-method:hover { background: #353b48; border-color: #00d2d3; }
+
+        /* --- MUSIC PLAYER STYLING (NEW) --- */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 10px 18px;
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 9999;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+            transition: 0.3s;
+        }
+
+        .music-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: 0.2s;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music-btn:hover {
+            color: #00d2d3;
+            transform: scale(1.15);
+        }
+        
+        .music-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Kelas untuk status Loop Aktif */
+        .loop-active {
+            color: #00d2d3 !important;
+            text-shadow: 0 0 8px rgba(0, 210, 211, 0.6);
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes zoomIn { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        @keyframes pulseGlow { 0% { box-shadow: 0 0 10px rgba(0,210,211,0.4); } 50% { box-shadow: 0 0 25px rgba(0,210,211,0.8); } 100% { box-shadow: 0 0 10px rgba(0,210,211,0.4); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid #777;
+            color: #aaa;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 20px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="music-player">
+    <button class="music-btn" onclick="prevMusic()" title="Previous">⏮️</button>
+    <button class="music-btn" id="playPauseBtn" onclick="togglePlay()" title="Play/Pause">⏸</button> <button class="music-btn" onclick="nextMusic()" title="Next">⏭️</button>
+    <button class="music-btn" id="loopBtn" onclick="toggleLoop()" title="Loop Song">🔁</button>
+</div>
+
+<div id="interstitial-modal">
+    <div class="interstitial-content">
+        <div class="close-countdown" id="countdown-display">3</div>
+        <img src="https://uploader.zenzxz.dpdns.org/uploads/1764871685819.jpeg" class="bot-logo" style="width:70px; height:70px; margin:0 auto 15px auto;">
+        <h3 style="color:white; margin:0 0 10px 0;">Welcome to pricelist Elara - MD</h3>
+        <p style="color:#aaa; font-size:0.85em; margin-bottom:20px;">Kunjungi dan Ikuti Sosial Media Owner Untuk Melihat Informasi Terbaru Seputar Tentang Bot Elara - MD</p>
+        
+        <div id="social-links-container" style="display:none;">
+            <a href="https://www.instagram.com/elaraai__" target="_blank" class="social-btn">📷 Instagram</a>
+            <a href="https://www.tiktok.com/@fariel_bot" target="_blank" class="social-btn">🎵 TikTok</a>
+            <a href="https://chat.whatsapp.com/HqYS4bZEyLU4OiDnw8XDcH" target="_blank" class="social-btn">🤖 Group Chat</a>
+            <a href="https://chat.whatsapp.com/FYtslxWwSHQ6T25oo7OB4l" target="_blank" class="social-btn">🛍 Group Store</a>
+            <a href="https://whatsapp.com/channel/0029Vb6p7345a23vpJBq3a1h" target="_blank" class="social-btn">📢 Channel Update</a>
+        </div>
+        
+        <button onclick="showSocials()" id="visit-btn" style="background:#00d2d3; color:#000; border:none; padding:10px 25px; border-radius:20px; font-weight:bold; cursor:pointer;">Kunjungi Medsos</button>
+    </div>
+</div>
+
+<div class="container">
+    <div id="main-menu">
+        <img src="https://uploader.zenzxz.dpdns.org/uploads/1764871685819.jpeg" alt="Logo Elara" class="bot-logo">
+        <h1 class="store-name">Elara Store</h1>
+        <h3 class="store-subtitle">Bot WhatsApp Multifungsi</h3>
+        
+        <p class="welcome-text">
+            𝘚𝘦𝘭𝘢𝘮𝘢𝘵 𝘥𝘢𝘵𝘢𝘯𝘨 𝘥𝘪 𝐄𝐥𝐚𝐫𝐚 𝐒𝐭𝐨𝐫𝐞. 𝐄𝐥𝐚𝐫𝐚 𝐒𝐭𝐨𝐫𝐞 𝘮𝘦𝘳𝘶𝘱𝘢𝘬𝘢𝘯 𝘴𝘵𝘰𝘳𝘦 𝘣𝘰𝘵 𝘞𝘩𝘢𝘵𝘴𝘈𝘱𝘱 𝘵𝘦𝘳𝘣𝘢𝘪𝘬 𝘺𝘢𝘯𝘨 𝘮𝘦𝘯𝘢𝘸𝘢𝘳𝘬𝘢𝘯 𝘱𝘳𝘰𝘥𝘶𝘬 𝘣𝘦𝘳𝘬𝘶𝘢𝘭𝘪𝘵𝘢𝘴, 𝘳𝘦𝘴𝘱𝘰𝘯 𝘤𝘦𝘱𝘢𝘵, 𝘥𝘢𝘯 𝘥𝘶𝘬𝘶𝘯𝘨𝘢𝘯 𝘵𝘦𝘬𝘯𝘪𝘴 𝘢𝘯𝘥𝘢𝘭. 𝘗𝘪𝘭𝘪𝘩𝘢𝘯 𝘵𝘦𝘱𝘢𝘵 𝘶𝘯𝘵𝘶𝘬 𝘬𝘦𝘣𝘶𝘵𝘶𝘩𝘢𝘯 𝘥𝘪𝘨𝘪𝘵𝘢𝘭 𝘈𝘯𝘥𝘢!
+        </p>
+
+        <button class="btn-menu" onclick="triggerSection('premium')">✨ 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 𝗕𝗢𝗧</button>
+        <button class="btn-menu" onclick="triggerSection('sewa')">🛍️ 𝗦𝗘𝗪𝗔 𝗕𝗢𝗧</button>
+        <button class="btn-menu" onclick="triggerSection('vvip')">🎁 𝗦𝗘𝗪𝗔 𝗕𝗢𝗧 𝗩𝗩𝗜𝗣</button>
+        <button class="btn-menu" onclick="triggerSection('script')">📱 𝗦𝗖𝗥𝗜𝗣𝗧 𝗘𝗟𝗔𝗥𝗔 - 𝗠𝗗</button>
+        <button class="btn-menu" onclick="triggerSection('reaction')">📲 𝗥𝗘𝗔𝗖𝗧𝗜𝗢𝗡 𝗦𝗔𝗟𝗨𝗥𝗔𝗡</button>
+        <button class="btn-menu" onclick="triggerSection('jasa')">📃 𝗝𝗔𝗦𝗔 𝗟𝗔𝗜𝗡𝗡𝗬𝗔</button>
+    </div>
+
+    <div id="section-premium" class="content-section">
+        <div class="section-header">
+            <h2>✨ 𝗣𝗥𝗘𝗠𝗜𝗨𝗠 𝗕𝗢𝗧</h2>
+            <a href="https://farielxyz.github.io/Promo/" target="_blank" class="promo-btn">🔥 LIHAT PROMO</a>
+        </div>
+
+        <div class="price-card">
+            <div class="price-info">
+                <h4>15 Days</h4>
+                <span>Rp5.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Premium Bot 15 Days', 5000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>30 Days</h4>
+                <span>Rp10.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Premium Bot 30 Days', 10000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>60 Days</h4>
+                <span>Rp20.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Premium Bot 60 Days', 20000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Permanen</h4>
+                <span>Rp30.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Premium Bot Permanen', 30000)">BELI 🛍️</button>
+        </div>
+
+        <div class="benefit-box">
+            <span class="benefit-title">BENEFITS</span>
+            <ul class="benefit-list">
+                <li>Get Unlimited Limit</li>
+                <li>Get Access All Fitur</li>
+                <li>Get Access Private Message</li>
+                <li>Get Profile Good</li>
+                <li>Free Request Features</li>
+            </ul>
+        </div>
+        <button class="btn-back" onclick="goBack()">⬅ Kembali</button>
+    </div>
+
+    <div id="section-sewa" class="content-section">
+        <div class="section-header">
+            <h2>🛍️ 𝗦𝗘𝗪𝗔 𝗕𝗢𝗧</h2>
+            <a href="https://farielxyz.github.io/Promo/" target="_blank" class="promo-btn">🔥 LIHAT PROMO</a>
+        </div>
+
+        <div class="price-card">
+            <div class="price-info">
+                <h4>7 Days</h4>
+                <span>Rp7.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa Bot 7 Days', 7000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>30 Days</h4>
+                <span>Rp15.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa Bot 30 Days', 15000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>60 Days</h4>
+                <span>Rp25.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa Bot 60 Days', 25000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Permanen</h4>
+                <span>Rp50.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa Bot Permanen', 50000)">BELI 🛍️</button>
+        </div>
+
+        <div class="benefit-box">
+            <span class="benefit-title">BENEFITS</span>
+            <ul class="benefit-list">
+                <li>Feature Groups</li>
+                <li>Antilink</li>
+                <li>Welcome</li>
+                <li>Enable</li>
+                <li>Store List</li>
+                <li>Promote/Demote</li>
+                <li>HideTag</li>
+                <li>Upswgc</li>
+                <li>Dan Lain Lain</li>
+            </ul>
+        </div>
+        <button class="btn-back" onclick="goBack()">⬅ Kembali</button>
+    </div>
+
+    <div id="section-vvip" class="content-section">
+        <div class="section-header">
+            <h2>🎁 𝗦𝗘𝗪𝗔 𝗕𝗢𝗧 𝗩𝗩𝗜𝗣</h2>
+            <a href="https://farielxyz.github.io/Promo/" target="_blank" class="promo-btn">🔥 LIHAT PROMO</a>
+        </div>
+
+        <div class="price-card">
+            <div class="price-info">
+                <h4>7 Days</h4>
+                <span>Rp10.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa VVIP 7 Days', 10000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>30 Days</h4>
+                <span>Rp20.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa VVIP 30 Days', 20000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>60 Days</h4>
+                <span>Rp30.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa VVIP 60 Days', 30000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Permanen</h4>
+                <span>Rp60.000 / Group</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Sewa VVIP Permanen', 60000)">BELI 🛍️</button>
+        </div>
+
+        <div class="benefit-box">
+            <span class="benefit-title">BENEFITS</span>
+            <ul class="benefit-list">
+                <li>Able To Access All Premium Features Within The Group</li>
+                <li>Unlimited Limit For Group Members</li>
+                <li>Feature Groups</li>
+                <li>Antilink</li>
+                <li>Welcome</li>
+                <li>Enable</li>
+                <li>Store List</li>
+                <li>Promote/Demote</li>
+                <li>HideTag</li>
+                <li>Dan Lain Lain</li>
+            </ul>
+        </div>
+        <button class="btn-back" onclick="goBack()">⬅ Kembali</button>
+    </div>
+
+    <div id="section-script" class="content-section">
+        <div class="section-header">
+            <h2>📱 𝗦𝗖𝗥𝗜𝗣𝗧 𝗘𝗟𝗔𝗥𝗔 - 𝗠𝗗</h2>
+        </div>
+
+        <div class="benefit-box" style="text-align:left;">
+            <p>┌───〔 `Sell Script MD`〕</p>
+            <p>│✿ <b>Nama Script</b> = Elara - MD</p>
+            <p>│✿ <b>Modules Types</b> = ESM</p>
+            <p>│✿ <b>Format</b> = Plugins System</p>
+            <p>│✿ <b>Base</b> = Ponta</p>
+            <p>│✿ <b>Syze</b> = Under 18 MB</p>
+            <p>│✿ <b>Total Fitur</b> = 1800++</p>
+            <p>│✿ <b>Price</b> = Rp80.000</p>
+            <p>│✿ Support Button</p>
+            <p>│✿ Security Database</p>
+            <p>│✿ Support JID LID</p>
+            <p>│✿ No Enc</p>
+            <p>│✿ Support Pairing Code & Scan QR</p>
+            <p>│✿ Full Garansi</p>
+            <p>│🆓 Free Update</p>
+            <p>│🆓 Free Apikey</p>
+            <p>│🆓 Free Fix Error</p>
+            <p>│🆓 Free Req Fitur</p>
+            <p>│🆓 Free Support Button</p>
+            <p>│🆓 Free Diajarin Sampai Bisa</p>
+            <p>│🆓 Free Panel Pterodactyl Unlimited 1 Bulan</p>
+            <p>│🆓 Bisa Open Sewa Bot Sendiri</p>
+            <p>│🆓 Bisa Open Premium User Sendiri</p>
+        </div>
+
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Elara Script</h4>
+                <span>Rp80.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Script Elara MD', 80000)">BELI 🛍️</button>
+        </div>
+        <button class="btn-back" onclick="goBack()">⬅ Kembali</button>
+    </div>
+
+    <div id="section-reaction" class="content-section">
+        <div class="section-header">
+            <h2>📲 𝗥𝗘𝗔𝗖𝗧𝗜𝗢𝗡 𝗦𝗔𝗟𝗨𝗥𝗔𝗡</h2>
+            <a href="https://farielxyz.github.io/Promo/" target="_blank" class="promo-btn">🔥 LIHAT PROMO</a>
+        </div>
+
+        <div class="benefit-box">
+            <span class="benefit-title">BENEFIT</span>
+            <ul class="benefit-list">
+                <li>1.000 Reaction Tiap Pesan Saluran</li>
+                <li>Bebas Request Berapa Macam Emoji</li>
+                <li>Mendapatkan total ± 1.000 Emoji</li>
+                <li>Proses Cepat & Aman</li>
+            </ul>
+        </div>
+
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Pilih Jumlah Pesan</h4>
+                <span>Mulai Rp2.000</span>
+            </div>
+            <button class="btn-buy" onclick="openReactionSelector()">BELI 🛍️</button>
+        </div>
+        
+        <button class="btn-back" onclick="goBack()">⬅ Kembali</button>
+    </div>
+
+    <div id="section-jasa" class="content-section">
+        <div class="section-header">
+            <h2>📃 𝗝𝗔𝗦𝗔 𝗟𝗔𝗜𝗡𝗡𝗬𝗔</h2>
+        </div>
+
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Jasa Run Bot</h4>
+                <span>Rp2.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Jasa Run Bot', 2000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Jasa Rename Script</h4>
+                <span>Rp15.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Jasa Rename Script', 15000)">BELI 🛍️</button>
+        </div>
+        <div class="price-card">
+            <div class="price-info">
+                <h4>Jasa Fix Fitur</h4>
+                <span>Rp20.000</span>
+            </div>
+            <button class="btn-buy" onclick="openPayment('Jasa Fix Fitur', 20000)">BELI 🛍️</button>
+        </div>
+        <button class="btn-back" onclick="goBack()">⬅ Kembali</button>
+    </div>
+
+</div>
+
+<div id="reactionSelectorModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeReactionSelector()">&times;</span>
+        <h3>Pilih Jumlah Pesan</h3>
+        <p style="font-size:0.8em; color:#aaa;">Gulir ke bawah untuk memilih angka</p>
+        
+        <div class="scroll-selector-container">
+            <div id="scroll-content"></div>
+        </div>
+        
+        <button class="btn-back" onclick="closeReactionSelector()">Batal</button>
+    </div>
+</div>
+
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closePayment()">&times;</span>
+        
+        <div id="payment-details">
+            <h3 style="margin-top:0;">SCAN QRIS</h3>
+            <div class="qris-container">
+                <img src="https://files.catbox.moe/yx15kb.jpg" alt="QRIS Payment" class="qris-img">
+            </div>
+            
+            <p style="margin:5px 0;">Total Bayar (Termasuk Admin):</p>
+            <div class="total-price" id="display-price">Rp0</div>
+            
+            <p style="font-size:0.9em; margin-top:10px;">Atau Transfer ke Nomor E-Wallet (Dana/Gopay/dll):</p>
+            
+            <div class="copy-box" onclick="copyNumber()">
+                08983999939
+                <div id="copy-status" style="font-size:0.6em; color:#2ecc71;">(Klik untuk Salin)</div>
+            </div>
+
+            <p class="warning-text">
+                ⚠️ Harap Cek Ulang Nomor Sebelum Transfer dan Kirim Bukti Transfer Ke Owner!<br>
+                Salah Transfer Bukan Tanggung Jawab Owner
+            </p>
+
+            <button class="btn-confirm" onclick="showMethodSelector()">📞 Kirim Bukti Transfer ke Owner</button>
+        </div>
+
+        <div id="method-selector" style="display:none;">
+            <h3>PILIH METODE PEMBAYARAN</h3>
+            <p style="font-size:0.9em; color:#aaa; margin-bottom:15px;">Yang anda gunakan saat transfer:</p>
+            
+            <div class="method-list" style="display:flex;">
+                <div class="btn-method" onclick="sendToWA('QRIS')">
+                    <span>QRIS (All Payment)</span> <span>📲</span>
+                </div>
+                <div class="btn-method" onclick="sendToWA('Dana')">
+                    <span>Dana</span> <span>🔵</span>
+                </div>
+                <div class="btn-method" onclick="sendToWA('Gopay')">
+                    <span>Gopay</span> <span>🟢</span>
+                </div>
+                <div class="btn-method" onclick="sendToWA('ShopeePay')">
+                    <span>ShopeePay</span> <span>🟠</span>
+                </div>
+                <div class="btn-method" onclick="sendToWA('SeaBank')">
+                    <span>SeaBank</span> <span>🏦</span>
+                </div>
+            </div>
+            <button class="btn-back" onclick="hideMethodSelector()" style="width:100%; margin-top:15px;">⬅ Kembali ke QRIS</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // --- VARIABEL UTAMA ---
+    let selectedItemName = "";
+    let finalPrice = 0;
+    let targetSectionId = "";
+
+    // --- LOGIKA MUSIC PLAYER ---
+    const playlist = [
+        "https://api-faa.my.id/faa/cdn/1_wth.mp3",
+        "https://api-faa.my.id/faa/cdn/1_jiq.mp3",
+        "https://api-faa.my.id/faa/cdn/1_q5m.mp3",
+        "https://api-faa.my.id/faa/cdn/1_q4c.mp3",
+        "https://api-faa.my.id/faa/cdn/1_2tq.mp3"
+    ];
+
+    let currentSongIndex = 0;
+    let audio = new Audio();
+    let isLooping = false;
+    // MODIFIKASI: Default state dianggap sedang memutar (untuk UI)
+    let isPlaying = false; 
+
+    // Inisialisasi Audio
+    function loadAndPlay(index) {
+        if (index < 0) index = playlist.length - 1;
+        if (index >= playlist.length) index = 0;
+        
+        currentSongIndex = index;
+        audio.src = playlist[currentSongIndex];
+        audio.load();
+        
+        // Cek status loop
+        audio.loop = isLooping;
+
+        playMusic();
+    }
+
+    function playMusic() {
+        // MODIFIKASI: Set autoplay true di elemen audio untuk memaksa browser
+        audio.autoplay = true;
+
+        const playPromise = audio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(_ => {
+                // Playback sukses
+                isPlaying = true;
+                updatePlayBtn();
+            }).catch(error => {
+                // Autoplay dicegah, tapi kita tetap update UI seolah-olah playing
+                // agar saat user klik pertama kali langsung bunyi
+                console.log("Menunggu interaksi user untuk audio...");
+                isPlaying = false;
+                updatePlayBtn();
+            });
+        }
+    }
+
+    function pauseMusic() {
+        audio.pause();
+        isPlaying = false;
+        updatePlayBtn();
+    }
+
+    function togglePlay() {
+        if (isPlaying) {
+            pauseMusic();
+        } else {
+            playMusic();
+        }
+    }
+
+    function nextMusic() {
+        loadAndPlay(currentSongIndex + 1);
+    }
+
+    function prevMusic() {
+        loadAndPlay(currentSongIndex - 1);
+    }
+
+    function toggleLoop() {
+        isLooping = !isLooping;
+        audio.loop = isLooping;
+        
+        const btn = document.getElementById('loopBtn');
+        if (isLooping) {
+            btn.classList.add('loop-active');
+        } else {
+            btn.classList.remove('loop-active');
+        }
+    }
+
+    function updatePlayBtn() {
+        const btn = document.getElementById('playPauseBtn');
+        btn.innerText = isPlaying ? "⏸" : "▶️";
+    }
+
+    // Event Listener saat lagu selesai
+    audio.addEventListener('ended', () => {
+        if (!isLooping) {
+            nextMusic(); // Lanjut ke lagu berikutnya jika tidak loop
+        }
+    });
+
+    // Mulai saat halaman dimuat (MODIFIKASI: AGAR LANGSUNG PUTAR)
+    window.addEventListener('load', () => {
+        audio.src = playlist[0];
+        // Paksa autoplay
+        audio.autoplay = true; 
+        playMusic();
+        
+        // Fallback: Jika autoplay dicegah browser, klik pertama di body akan memicunya
+        document.body.addEventListener('click', function() {
+            if (audio.paused) {
+                playMusic();
+            }
+        }, { once: true });
+    });
+
+
+    // --- LOGIKA INTERSTITIAL (IKLAN POPUP) ---
+    function triggerSection(sectionId) {
+        targetSectionId = sectionId;
+        const interstitial = document.getElementById('interstitial-modal');
+        const countdownDisplay = document.getElementById('countdown-display');
+        const mainMenu = document.getElementById('main-menu');
+        
+        // Reset state popup
+        document.getElementById('social-links-container').style.display = 'none';
+        document.getElementById('visit-btn').style.display = 'inline-block';
+        
+        mainMenu.style.display = 'none';
+        interstitial.style.display = 'flex';
+        
+        // Countdown
+        let count = 3;
+        countdownDisplay.innerHTML = count;
+        countdownDisplay.onclick = null;
+        
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                countdownDisplay.innerHTML = count;
+            } else {
+                clearInterval(timer);
+                countdownDisplay.innerHTML = "✖";
+                countdownDisplay.style.background = "#ff4757";
+                countdownDisplay.onclick = function() {
+                    closeInterstitial();
+                };
+            }
+        }, 1000);
+    }
+
+    function showSocials() {
+        document.getElementById('visit-btn').style.display = 'none';
+        document.getElementById('social-links-container').style.display = 'block';
+    }
+
+    function closeInterstitial() {
+        document.getElementById('interstitial-modal').style.display = 'none';
+        document.getElementById('section-' + targetSectionId).style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function goBack() {
+        document.querySelectorAll('.content-section').forEach(el => el.style.display = 'none');
+        document.getElementById('main-menu').style.display = 'block';
+    }
+
+    // --- LOGIKA PEMBAYARAN ---
+    function openPayment(itemName, price) {
+        const modal = document.getElementById('paymentModal');
+        const priceDisplay = document.getElementById('display-price');
+        
+        document.getElementById('payment-details').style.display = 'block';
+        document.getElementById('method-selector').style.display = 'none';
+
+        selectedItemName = itemName;
+        finalPrice = price + 2000;
+        
+        priceDisplay.innerText = "Rp" + finalPrice.toLocaleString('id-ID');
+        modal.style.display = 'flex';
+    }
+
+    function closePayment() {
+        document.getElementById('paymentModal').style.display = 'none';
+    }
+
+    // --- LOGIKA REACTION SELECTOR ---
+    function openReactionSelector() {
+        const modal = document.getElementById('reactionSelectorModal');
+        const content = document.getElementById('scroll-content');
+        
+        content.innerHTML = '';
+
+        for (let i = 1; i <= 30; i++) {
+            let div = document.createElement('div');
+            div.className = 'scroll-item';
+            div.innerText = i + " Pesan";
+            div.onclick = function() { selectReactionQuantity(i); };
+            content.appendChild(div);
+        }
+
+        let unli = document.createElement('div');
+        unli.className = 'scroll-item special';
+        unli.innerText = "⭐ UNLIMITED ⭐";
+        unli.onclick = function() { selectReactionQuantity('UNLIMITED'); };
+        content.appendChild(unli);
+
+        modal.style.display = 'flex';
+    }
+
+    function closeReactionSelector() {
+        document.getElementById('reactionSelectorModal').style.display = 'none';
+    }
+
+    function selectReactionQuantity(qty) {
+        closeReactionSelector();
+        
+        let priceBase = 0;
+        let itemName = "";
+
+        if (qty === 'UNLIMITED') {
+            priceBase = 80000;
+            itemName = "Reaction Saluran Unlimited";
+        } else if (qty === 1) {
+            priceBase = 4000;
+            itemName = "Reaction Saluran 1 Pesan";
+        } else {
+            priceBase = qty * 2000;
+            itemName = "Reaction Saluran " + qty + " Pesan";
+        }
+
+        openPayment(itemName, priceBase);
+    }
+
+    function copyNumber() {
+        navigator.clipboard.writeText("08983999939");
+        document.getElementById("copy-status").innerText = "✅ Nomor berhasil disalin!";
+        setTimeout(() => document.getElementById("copy-status").innerText = "(Klik untuk Salin)", 2000);
+    }
+
+    function showMethodSelector() {
+        document.getElementById('payment-details').style.display = 'none';
+        document.getElementById('method-selector').style.display = 'block';
+    }
+
+    function hideMethodSelector() {
+        document.getElementById('method-selector').style.display = 'none';
+        document.getElementById('payment-details').style.display = 'block';
+    }
+
+    function sendToWA(method) {
+        const phone = "6285363681987";
+        let message = `👋 Hai Min, Mau Order ${selectedItemName}\n\n`;
+        message += `💵 Total Transfer: Rp${finalPrice.toLocaleString('id-ID')}\n`;
+        message += `💳 Metode: ${method}\n\n`;
+        message += `Mohon segera diproses ya! (Sudah transfer)`;
+
+        const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+        window.open(url, '_blank');
+        closePayment();
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('paymentModal');
+        const modalReact = document.getElementById('reactionSelectorModal');
+        if (event.target == modal) {
+            closePayment();
+        }
+        if (event.target == modalReact) {
+            closeReactionSelector();
+        }
+    }
+</script>
+
+</body>
+</html>
